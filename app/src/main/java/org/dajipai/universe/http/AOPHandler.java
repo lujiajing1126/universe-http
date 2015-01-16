@@ -15,8 +15,8 @@ public class AOPHandler<T extends ResultResponse> extends DemoResponse<T> {
   }
   @Override
   public void onSuccess(T response) {
-    if(response.getCode().equals(BaseHTTPCode.UNAUTHORIZED)) {
-      //TODO
+    if(BaseHTTPCode.UNAUTHORIZED.equals(response.getCode())) {
+      //TODO: AOP
     } else {
       universeResponse.onSuccess(response);
     }
