@@ -10,6 +10,7 @@ import java.util.Map;
 
 import io.megrez.universe.request.UniverseRequest;
 import io.megrez.universe.utils.UniverseHttpHeaderParser;
+import timber.log.Timber;
 
 /**
  * Created by megrez on 15/1/16.
@@ -41,6 +42,7 @@ public class UniverseStringResponseHandle implements UniverseResponseHandle<Stri
     return new UniverseRequest<String>(method,url,headers,params,errorListener) {
       @Override
       protected Response<String> parseNetworkResponse(NetworkResponse response) {
+        Timber.d(Thread.currentThread().getName());
         String parsed;
         try {
           parsed = new String(response.data, UniverseHttpHeaderParser.parseCharset(response.headers));

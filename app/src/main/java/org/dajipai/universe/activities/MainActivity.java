@@ -32,18 +32,15 @@ public class MainActivity extends ActionBarActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Timber.d("onCreate");
     setContentView(R.layout.activity_main);
     ButterKnife.inject(this);
     initView();
   }
 
   protected void initView() {
-    Timber.d("InitView");
     LoginBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Timber.d("Click");
         DemoHttp.getInstance().signIn("15902122792","12345678",new DemoResponse<String>() {
           @Override
           public void onSuccess(String response) {
