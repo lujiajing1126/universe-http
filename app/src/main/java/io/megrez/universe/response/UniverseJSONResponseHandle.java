@@ -8,6 +8,8 @@ import com.android.volley.VolleyError;
 
 import java.util.Map;
 
+import io.megrez.universe.request.UniverseRequest;
+
 /**
  * Created by megrez on 15/1/16.
  */
@@ -35,8 +37,8 @@ public class UniverseJSONResponseHandle<T> implements UniverseResponseHandle<T> 
   }
 
   @Override
-  public Request<T> getRequest() {
-    return new Request<T>(method,url,errorListener) {
+  public UniverseRequest<T> getRequest() {
+    return new UniverseRequest<T>(method,url,headers,params,errorListener) {
       @Override
       protected Response<T> parseNetworkResponse(NetworkResponse response) {
         return null;
@@ -45,16 +47,6 @@ public class UniverseJSONResponseHandle<T> implements UniverseResponseHandle<T> 
       @Override
       protected void deliverResponse(T response) {
         universeResponse.onSuccess(response);
-      }
-
-      @Override
-      public Map<String, String> getHeaders() throws AuthFailureError {
-        return headers!=null ? headers:super.getHeaders();
-      }
-
-      @Override
-      protected Map<String, String> getParams() throws AuthFailureError {
-        return params!=null ? params:super.getParams();
       }
     };
   }

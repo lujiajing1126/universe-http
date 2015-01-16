@@ -1,14 +1,15 @@
 package io.megrez.universe.response;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+
+import io.megrez.universe.request.UniverseRequest;
+import io.megrez.universe.utils.UniverseHttpHeaderParser;
 
 /**
  * Created by megrez on 15/1/16.
@@ -36,13 +37,13 @@ public class UniverseStringResponseHandle implements UniverseResponseHandle<Stri
   }
 
   @Override
-  public Request<String> getRequest() {
-    return new Request<String>(method,url,errorListener) {
+  public UniverseRequest<String> getRequest() {
+    return new UniverseRequest<String>(method,url,headers,params,errorListener) {
       @Override
       protected Response<String> parseNetworkResponse(NetworkResponse response) {
         String parsed;
         try {
-          parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+          parsed = new String(response.data, UniverseHttpHeaderParser.parseCharset(response.headers));
         } catch (UnsupportedEncodingException e) {
           parsed = new String(response.data);
         }
@@ -52,16 +53,6 @@ public class UniverseStringResponseHandle implements UniverseResponseHandle<Stri
       @Override
       protected void deliverResponse(String response) {
         universeResponse.onSuccess(response);
-      }
-
-      @Override
-      public Map<String, String> getHeaders() throws AuthFailureError {
-        return headers!=null ? headers:super.getHeaders();
-      }
-
-      @Override
-      protected Map<String, String> getParams() throws AuthFailureError {
-        return params!=null ? params:super.getParams();
       }
     };
   }
