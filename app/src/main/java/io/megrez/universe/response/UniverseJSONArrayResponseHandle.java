@@ -5,8 +5,11 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
 import io.megrez.universe.http.UniverseHttpClient;
@@ -16,7 +19,7 @@ import io.megrez.universe.utils.UniverseHttpHeaderParser;
 /**
  * Created by megrez on 15/1/16.
  */
-public class UniverseJSONResponseHandle<T> implements UniverseResponseHandle<T> {
+public class UniverseJSONArrayResponseHandle<T> implements UniverseResponseHandle<List<T>> {
   private int method;
   private String url;
   private Map<String,String> headers;
@@ -25,7 +28,7 @@ public class UniverseJSONResponseHandle<T> implements UniverseResponseHandle<T> 
   private Response.ErrorListener errorListener;
   private Class<?> clazz;
 
-  public UniverseJSONResponseHandle(int method,String url,Map<String,String> headers,Map<String,String> params, final IUniverseResponse<T> universeResponse, Class<?> clazz) {
+  public UniverseJSONArrayResponseHandle(int method,String url,Map<String,String> headers,Map<String,String> params, final IUniverseResponse<T> universeResponse, Class<?> clazz) {
     this.method = method;
     this.url = url;
     this.headers = headers;
@@ -42,14 +45,15 @@ public class UniverseJSONResponseHandle<T> implements UniverseResponseHandle<T> 
   }
 
   @Override
-  public UniverseRequest<T> getRequest() {
-    return new UniverseRequest<T>(method,url,headers,params,errorListener) {
+  public UniverseRequest<List<T>> getRequest() {
+    return new UniverseRequest<List<T>>(method,url,headers,params,errorListener) {
       @Override
-      protected Response<T> parseNetworkResponse(NetworkResponse response) {
+      protected Response<List<T>> parseNetworkResponse(NetworkResponse response) {
         try {
           String jsonString = new String(response.data, UniverseHttpHeaderParser.parseCharset(response.headers));
-          T responseObject = (T)UniverseHttpClient.getInstance().getGson().fromJson(jsonString,clazz);
-          return Response.success(responseObject,HttpHeaderParser.parseCacheHeaders(response));
+          Type collectionType = new TypeToken<List<T>>(){}.getType();
+          List<T> responseObject = UniverseHttpClient.getInstance().getGson().fromJson(jsonString,collectionType);
+          return Response.success(responseObject, HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
           return Response.error(new ParseError(e));
         } catch (ClassCastException ex) {
@@ -58,7 +62,7 @@ public class UniverseJSONResponseHandle<T> implements UniverseResponseHandle<T> 
       }
 
       @Override
-      protected void deliverResponse(T response) {
+      protected void deliverResponse(List<T> response) {
         universeResponse.onSuccess(response);
       }
     };

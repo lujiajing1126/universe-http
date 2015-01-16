@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import org.dajipai.universe.R;
 import org.dajipai.universe.http.DemoHttp;
 import org.dajipai.universe.http.DemoResponse;
+import org.dajipai.universe.models.SigninResponse;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,11 +42,11 @@ public class MainActivity extends ActionBarActivity {
     LoginBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        DemoHttp.getInstance().signIn("15902122792","12345678",new DemoResponse<String>() {
+        DemoHttp.getInstance().signIn("15902122792","12345678",new DemoResponse<SigninResponse>() {
           @Override
-          public void onSuccess(String response) {
-            Timber.d(response);
-            HelloWorldTextView.setText(response);
+          public void onSuccess(SigninResponse response) {
+            Timber.d(response.toString());
+            HelloWorldTextView.setText(response.getName());
           }
           @Override
           public void onFail(VolleyError error) {

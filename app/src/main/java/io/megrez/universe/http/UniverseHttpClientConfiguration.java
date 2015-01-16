@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 /**
  * Created by megrez on 15/1/16.
@@ -11,10 +12,12 @@ import com.android.volley.toolbox.Volley;
 public class UniverseHttpClientConfiguration {
   private Context mContext;
   private RequestQueue requestQueue;
+  private Gson gson;
 
-  public UniverseHttpClientConfiguration(Context context, RequestQueue requestQueue) {
+  public UniverseHttpClientConfiguration(Context context, RequestQueue requestQueue,Gson gson) {
     this.mContext = context;
     this.requestQueue = requestQueue;
+    this.gson = gson;
   }
 
   public RequestQueue getRequestQueue() {
@@ -25,9 +28,14 @@ public class UniverseHttpClientConfiguration {
     return mContext;
   }
 
+  public Gson getGson() {
+    return gson;
+  }
+
   public static class Builder {
     private Context mContext;
     private RequestQueue requestQueue;
+    private Gson gson = new Gson();
     public Builder(Context context) {
       this.mContext = context;
     }
@@ -38,7 +46,7 @@ public class UniverseHttpClientConfiguration {
     }
 
     public UniverseHttpClientConfiguration build() {
-      return new UniverseHttpClientConfiguration(mContext,requestQueue);
+      return new UniverseHttpClientConfiguration(mContext,requestQueue,gson);
     }
 
   }

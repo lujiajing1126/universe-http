@@ -1,5 +1,8 @@
 package org.dajipai.universe.http;
 
+import org.dajipai.universe.models.ResultResponse;
+import org.dajipai.universe.models.SigninResponse;
+
 import io.megrez.universe.http.UniverseHttpClient;
 import io.megrez.universe.request.UniverseStringParam;
 import io.megrez.universe.response.IUniverseResponse;
@@ -23,10 +26,12 @@ public class DemoHttp {
     return demoHttp;
   }
 
-  public void signIn(String username,String password,IUniverseResponse<String> universeResponse) {
-    universeHttpClient.post(fullUrl(SIGN_IN),universeResponse,null,new UniverseStringParam("phone",username),new UniverseStringParam("password", MD5Enctyption.getCipher(password)));
+  public void signIn(String username,String password,IUniverseResponse<SigninResponse> universeResponse) {
+    universeHttpClient.postJSON(fullUrl(SIGN_IN),new AOPHandler<>(universeResponse),null,SigninResponse.class,new UniverseStringParam("phone",username),new UniverseStringParam("password", MD5Enctyption.getCipher(password)));
   }
   private String fullUrl(String url) {
     return String.format("%s%s",URL,url);
   }
+
+
 }
