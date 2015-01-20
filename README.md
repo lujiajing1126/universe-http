@@ -1,6 +1,8 @@
 # universe-http
 The Framework is still in developing ,it will be the http-framework for Whosv Android 3.0 instead of [Whosv/io-nothing-http](https://github.com/whosv/android-nothing-http), so it well be similar in many ways, especially the API
 
+[![Hex.pm](https://img.shields.io/badge/license-Apache2-blue.svg)]()
+
 ## Design
 
 The framwork is based on Google Volley Http Request lib, and we prepare to subsitute [loopj/android-async-http](https://github.com/loopj/android-async-http)
